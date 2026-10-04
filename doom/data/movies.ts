@@ -5,7 +5,7 @@ export interface Movie {
   id: string; title: string; year: number; phase: string; releaseOrder: number; chronologicalOrder: number
   poster: string // Wikipedia article title; the poster image is resolved from it at runtime
   description: string; director: string; runtime: number; characters: string[]
-  mainCharacter: string; mainVillain: string; setting: string; watchSearchUrl: string; questions: Question[]
+  mainCharacter: string; mainVillain: string; setting: string; watchSearchUrl: string; doomsday: boolean; doomOrder: number; fox: boolean; questions: Question[]
 }
 
 // title|year|phase|director|runtime|hero|villain|setting|wikipedia article|description|characters
@@ -47,7 +47,9 @@ The Marvels|2023|5|Nia DaCosta|105|Carol Danvers|Dar-Benn|Space / Aladna|The_Mar
 Deadpool & Wolverine|2024|5|Shawn Levy|128|Deadpool|Cassandra Nova|The Void|Deadpool_%26_Wolverine|Deadpool and Wolverine team up to save a dying universe.|Deadpool,Wolverine,Cassandra Nova
 Captain America: Brave New World|2025|5|Julius Onah|118|Sam Wilson|Red Hulk|Washington D.C.|Captain_America:_Brave_New_World|Sam Wilson steps into the role of Captain America amid a global crisis.|Sam Wilson,Joaquin Torres,President Ross
 Thunderbolts*|2025|5|Jake Schreier|127|Yelena Belova|The Void|New York|Thunderbolts*|A team of antiheroes is thrown together on a deadly mission.|Yelena Belova,Bucky Barnes,Red Guardian
-The Fantastic Four: First Steps|2025|6|Matt Shakman|115|Reed Richards|Galactus|Retro-futuristic New York|The_Fantastic_Four:_First_Steps|Marvel's first family faces Galactus in a retro-futuristic world.|Reed Richards,Sue Storm,Johnny Storm,Ben Grimm`.split('\n')
+The Fantastic Four: First Steps|2025|6|Matt Shakman|115|Reed Richards|Galactus|Retro-futuristic New York|The_Fantastic_Four:_First_Steps|Marvel's first family faces Galactus in a retro-futuristic world.|Reed Richards,Sue Storm,Johnny Storm,Ben Grimm
+X-Men|2000|FOX UNIVERSE|Bryan Singer|104|Wolverine|Magneto|Westchester / Liberty Island|X-Men_(film)|Mutants fight for acceptance as Magneto plots to transform world leaders.|Wolverine,Charles Xavier,Magneto,Rogue,Cyclops
+X2: X-Men United|2003|FOX UNIVERSE|Bryan Singer|134|Wolverine|William Stryker|Westchester / Alkali Lake|X2_(film)|The X-Men uneasily ally with Magneto against a military assault on mutants.|Wolverine,Charles Xavier,Magneto,Nightcrawler,Jean Grey`.split('\n')
 
 const CHRONO = [5,21,1,3,2,4,6,8,7,9,10,15,11,12,13,25,18,16,14,17,20,19,22,24,34,23,26,27,28,29,30,31,33,32,35,36,37,38,39]
 
@@ -92,17 +94,21 @@ const QS: Record<number, string[]> = {
 37: ["Who is the new Captain America?|Sam Wilson|Bucky Barnes|Steve Rogers|John Walker", "Which US president turns into Red Hulk?|Thaddeus Ross|Bruce Banner|Samuel Sterns|Helmut Zemo", "Which rare metal is found on Celestial Island?|Adamantium|Vibranium|Uru|Carbonadium", "Isaiah Bradley is a forgotten what?|Super-soldier|Wakandan general|S.H.I.E.L.D. director|Red Room agent", "Who is revealed as The Leader?|Samuel Sterns|Helmut Zemo|Bruce Banner|Arnim Zola"],
 38: ["Which Black Widow joins the Thunderbolts?|Yelena Belova|Natasha Romanoff|Ava Starr|Melina Vostokoff", "Who assembles the team at the start of the film?|Valentina Allegra de Fontaine|Nick Fury|Maria Hill|Thaddeus Ross", "Who is the team's Soviet super-soldier?|Red Guardian|Winter Soldier|Crimson Dynamo|Titanium Man", "What is the first name of the man who gains Sentry powers?|Bob|Ghost|Kang|Taskmaster", "What is Bob's dark alter ego?|The Void|Kang|Ultron|Hulk"],
 39: ["Who is the leader of the Fantastic Four?|Reed Richards|Johnny Storm|Ben Grimm|Sue Storm", "What is Ben Grimm's superhero name?|The Thing|The Hulk|Rocky|Colossus", "What is Johnny Storm's power?|He bursts into flames|He turns invisible|He stretches|He flies", "Who is the planet-devouring villain?|Galactus|Thanos|Doctor Doom|Ego", "Who is the Silver Surfer in the film?|Shalla-Bal|Norrin Radd|Nova|Frankie Raye"],
+40: ["Who founds the school for gifted youngsters?|Charles Xavier|Erik Lehnsherr|Scott Summers|Logan","Which mutant with an adamantium skeleton helps protect Rogue?|Wolverine|Cyclops|Beast|Gambit","Which young mutant absorbs powers and memories by touch?|Rogue|Storm|Jean Grey|Mystique","Which landmark is the setting of Magneto's final plan?|Statue of Liberty|Empire State Building|Brooklyn Bridge|Golden Gate Bridge","Which senator is transformed by Magneto's machine?|Robert Kelly|William Stryker|Henry Gyrich|Graydon Creed"],
+41: ["Which military man leads the assault on Xavier's school?|William Stryker|Robert Kelly|Bolivar Trask|Sebastian Shaw","Which teleporting mutant attacks the White House?|Nightcrawler|Gambit|Colossus|Angel","Which dam facility hides Stryker's secret base?|Alkali Lake|Genosha|Westchester|Liberty Island","Who sacrifices herself to save the team as the jet is flooded?|Jean Grey|Storm|Rogue|Mystique","What is the name of Stryker's mutant son?|Jason|Jonas|Joseph|Jacob"],
 }
 
+// Official Disney+ "Road to Avengers: Doomsday" list
+const DOOM = (['x-men','x2-x-men-united','captain-america-the-first-avenger','the-avengers','avengers-infinity-war','avengers-endgame','loki-season-1','loki-season-2','shang-chi-and-the-legend-of-the-ten-rings','spider-man-no-way-home','doctor-strange-in-the-multiverse-of-madness','black-panther-wakanda-forever','deadpool-wolverine','captain-america-brave-new-world','thunderbolts','the-fantastic-four-first-steps'])
 const slug = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 
 export const movies: Movie[] = META.map((line, i) => {
   const [title, year, ph, director, rt, hero, villain, setting, wiki, description, chars] = line.split('|')
   const id = slug(title)
   return {
-    id, title, year: +year, phase: `PHASE ${ph}`, releaseOrder: i + 1, chronologicalOrder: CHRONO.indexOf(i + 1) + 1,
+    id, title, year: +year, phase: /^\d/.test(ph) ? `PHASE ${ph}` : ph, releaseOrder: i + 1, chronologicalOrder: CHRONO.indexOf(i + 1) + 1,
     poster: wiki, description, director, runtime: +rt, characters: chars.split(','), mainCharacter: hero, mainVillain: villain,
-    setting, watchSearchUrl: watchUrl(title),
+    setting, watchSearchUrl: watchUrl(title), doomsday: DOOM.includes(id), doomOrder: DOOM.indexOf(id) + 1, fox: ph === 'FOX UNIVERSE',
     questions: (QS[i + 1] || []).map((s, k) => { const [question, correct, ...w] = s.split('|'); return { id: `${id}-${k + 1}`, question, options: [correct, ...w], correctAnswer: correct } }),
   }
 })

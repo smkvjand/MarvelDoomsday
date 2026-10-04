@@ -230,3 +230,19 @@ button.brand-mark { background: none; border: 0; padding: 0; }
 .path-panel small { display: block; margin-top: 12px !important; padding-right: 44px; font-size: 16px !important; line-height: 1.35; opacity: .75 !important; letter-spacing: .04em !important; }
 .path-arrow { top: 24px !important; bottom: auto !important; right: 24px !important; transition: transform .25s; }
 .path-panel:hover .path-arrow { transform: translateX(6px); color: var(--gold); }
+
+.doom-tag { position: absolute; z-index: 3; top: 8px; right: 8px; padding: 4px 8px; font: 800 8px 'Cinzel', serif; letter-spacing: .16em; color: #07120d; background: linear-gradient(180deg, #f0cf7a, var(--gold)); box-shadow: 0 0 14px rgba(216,178,90,.6); }
+.artifact-poster.doom { box-shadow: 0 0 0 1px var(--gold), 0 0 22px rgba(216,178,90,.28); }
+.artifact-poster.doom .badge { top: 34px; }
+.related { margin-top: 56px; }
+.related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 16px; }
+.related-item { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 0; background: transparent; border: 1px solid rgba(141,255,74,.2); color: #e7f1dc; text-align: left; cursor: pointer; transition: transform .2s; }
+.related-item:hover { transform: translateY(-6px); border-color: var(--doom); }
+.related-item b { padding: 0 8px 10px; font: 700 11px 'Cinzel', serif; letter-spacing: .06em; }
+.related-item.doom { border-color: var(--gold); box-shadow: 0 0 24px rgba(216,178,90,.35); background: linear-gradient(180deg, rgba(216,178,90,.14), transparent); }
+.related-item.doom b { color: var(--gold); }
+.path-grid { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1100px) { .path-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 760px) { .path-grid { grid-template-columns: 1fr; } }
+.path-panel.doom-path { border-color: var(--gold); background: linear-gradient(180deg, rgba(216,178,90,.18), rgba(3,10,6,.66)); box-shadow: 0 0 28px rgba(216,178,90,.3); }
+.path-panel.doom-path .path-name { color: var(--gold); }

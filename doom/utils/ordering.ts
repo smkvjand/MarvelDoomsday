@@ -1,8 +1,9 @@
 import { movies, type Movie } from '../data/movies'
-export type Order = 'release' | 'chronological' | 'phase'
-export const ORDER_LABEL: Record<Order, string> = { release: 'RELEASE ORDER', chronological: 'CHRONOLOGICAL', phase: 'BY PHASE' }
+export type Order = 'release' | 'chronological' | 'phase' | 'doomsday' | 'doomsday'
+export const ORDER_LABEL: Record<Order, string> = { release: 'RELEASE ORDER', chronological: 'CHRONOLOGICAL', phase: 'BY PHASE', doomsday: '☠ DOOMSDAY' }
 export function sortMovies(o: Order): Movie[] {
-  const a = [...movies]
+  if (o === 'doomsday') return movies.filter((m) => m.doomsday).sort((x, y) => x.doomOrder - y.doomOrder)
+  const a = movies.filter((m) => !m.fox)
   if (o === 'chronological') return a.sort((x, y) => x.chronologicalOrder - y.chronologicalOrder)
   if (o === 'phase') return a.sort((x, y) => x.phase.localeCompare(y.phase) || x.releaseOrder - y.releaseOrder)
   return a.sort((x, y) => x.releaseOrder - y.releaseOrder)

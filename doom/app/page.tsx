@@ -14,8 +14,8 @@ import { FailureScreen, FinalCompletion, SuccessScreen } from '../components/Res
 type Screen = 'landing' | 'paths' | 'archive' | 'detail' | 'trial' | 'success' | 'failure' | 'final'
 type Filter = 'all' | 'unseen' | 'seen' | 'verified'
 const FILTERS: [Filter, string][] = [['all', 'ALL'], ['unseen', 'NOT SEEN'], ['seen', 'SEEN'], ['verified', 'WORTHY']]
-const ORDERS: Order[] = ['release', 'chronological', 'phase']
-const BLURB: Record<Order, string> = { release: 'The way audiences lived it.', chronological: 'The way the timeline unfolds.', phase: 'Phase by phase, saga by saga.' }
+const ORDERS: Order[] = ['release', 'chronological', 'phase', 'doomsday']
+const BLURB: Record<Order, string> = { release: 'The way audiences lived it.', chronological: 'The way the timeline unfolds.', phase: 'Phase by phase, saga by saga.', doomsday: 'The 16 essentials before Avengers: Doomsday.' }
 
 export default function Page() {
   const { progress, complete, toggleSeen, setOrder, reset } = useProgress()
@@ -26,19 +26,23 @@ export default function Page() {
   const done = progress.completedMovies
   const seen = progress.seenMovies
   const [filter, setFilter] = useState<Filter>('all')
-  const total = movies.length
-  const pct = Math.round((done.length / total) * 100)
   const list = useMemo(() => sortMovies(progress.selectedOrder), [progress.selectedOrder])
+  const total = list.length
+  const doneN = list.filter((m) => done.includes(m.id)).length
+  const pct = Math.round((doneN / total) * 100)
   const isDone = (m: Movie) => done.includes(m.id)
   const isSeen = (m: Movie) => seen.includes(m.id) || done.includes(m.id)
-  const seenCount = movies.filter(isSeen).length
+  const seenCount = list.filter(isSeen).length
   const shown = list.filter((m) => filter === 'all' ? true : filter === 'unseen' ? !isSeen(m) : filter === 'seen' ? isSeen(m) && !isDone(m) : isDone(m))
   const groups = progress.selectedOrder === 'phase' ? Array.from(new Set(shown.map((m) => m.phase))).map((label) => ({ label, items: shown.filter((m) => m.phase === label) })) : [{ label: '', items: shown }]
   const years = (xs: Movie[]) => { const y = xs.map((m) => m.year); const a = Math.min(...y), b = Math.max(...y); return a === b ? `${a}` : `${a}–${b}` }
-  const open = (m: Movie) => { setSel(m); setScreen('detail') }
+  const open = (m: Movie) => { if (!list.includes(m)) setOrder('doomsday'); setSel(m); setScreen('detail') }
   const finish = (s: number) => { setScore(s); if (s === 5) { complete(sel.id); track('pass'); setScreen('success') } else { track('fail'); setScreen('failure') } }
   const markSeen = (id: string) => { if (!seen.includes(id)) track('seen'); toggleSeen(id) }
   const next = () => { const n = nextUnverified(list, done, sel.id); if (n) open(n); else setScreen('final') }
+  const ALIAS: Record<string, string> = { 'Iron Man': 'Tony Stark', 'Captain America': 'Steve Rogers', Hulk: 'Bruce Banner', 'Star-Lord': 'Peter Quill', 'Spider-Man': 'Peter Parker', 'Black Widow': 'Natasha Romanoff', Falcon: 'Sam Wilson', Hawkeye: 'Clint Barton', 'Black Panther': "T'Challa", 'Scarlet Witch': 'Wanda Maximoff', Rhodey: 'James Rhodes', 'Ms. Marvel': 'Kamala Khan', 'President Ross': 'Thaddeus Ross', 'General Ross': 'Thaddeus Ross' }
+  const chars = (m: Movie) => new Set([m.mainCharacter, ...m.characters].filter((x) => x !== 'The Avengers' && x !== 'The Eternals').map((x) => ALIAS[x] || x))
+  const related = useMemo(() => { const c = chars(sel); return movies.filter((m) => m.id !== sel.id && [...chars(m)].some((x) => c.has(x))).sort((a, b) => +b.doomsday - +a.doomsday || a.releaseOrder - b.releaseOrder).slice(0, 6) }, [sel])
   const ready = sel.questions.length === 5
 
   return <MotionConfig reducedMotion="user"><main className="marvel-shell">
@@ -52,7 +56,7 @@ export default function Page() {
         <button className={screen === 'paths' ? 'on' : ''} onClick={() => setScreen('paths')}>PATHS</button>
         <button className={screen === 'archive' || screen === 'detail' ? 'on' : ''} onClick={() => setScreen('archive')}>ARCHIVE</button>
       </nav>
-      <span className="top-status">{done.length} / {total} WORTHY · {seenCount} SEEN <b>{pct}%</b></span>
+      <span className="top-status">{doneN} / {total} WORTHY · {seenCount} SEEN <b>{pct}%</b></span>
     </div>
     <AnimatePresence mode="wait">
       {screen === 'landing' && <motion.section key="landing" className="landing screen-pad" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.04 }}>
@@ -63,18 +67,18 @@ export default function Page() {
 
       {screen === 'paths' && <motion.section key="paths" className="screen-pad paths-screen" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }}>
         <p className="eyebrow">THE FIRST DECISION</p><h2 className="section-title">CHOOSE YOUR <span>PATH.</span></h2>
-        <div className="path-grid">{ORDERS.map((o, i) => <motion.button key={o} className={`path-panel ${progress.selectedOrder === o ? 'active' : ''}`} whileHover={{ y: -8 }} onClick={() => { setOrder(o); setScreen('archive') }}>
+        <div className="path-grid">{ORDERS.map((o, i) => <motion.button key={o} className={`path-panel ${progress.selectedOrder === o ? 'active' : ''} ${o === 'doomsday' ? 'doom-path' : ''}`} whileHover={{ y: -8 }} onClick={() => { setOrder(o); setScreen('archive') }}>
           <span className="path-number">0{i + 1}</span><span className="path-name">{ORDER_LABEL[o]}</span><small>{BLURB[o]}</small><ArrowRight className="path-arrow" /></motion.button>)}</div>
       </motion.section>}
 
       {screen === 'archive' && <motion.section key="archive" className="screen-pad archive-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
         <div className="archive-heading"><div><p className="eyebrow">ARCHIVE // {ORDER_LABEL[progress.selectedOrder]}</p><h2 className="section-title">THE <span>ARTIFACTS.</span></h2></div>
-          <div className="verified-count"><strong>{done.length}</strong> / {total}<small>WORTHY · {seenCount} SEEN · {total} TOTAL</small></div></div>
+          <div className="verified-count"><strong>{doneN}</strong> / {total}<small>WORTHY · {seenCount} SEEN · {total} TOTAL</small></div></div>
         <div className="control-row">
           <div className="seg" role="group" aria-label="Viewing order">{ORDERS.map((o) => <button key={o} aria-pressed={progress.selectedOrder === o} className={progress.selectedOrder === o ? 'on' : ''} onClick={() => setOrder(o)}>{ORDER_LABEL[o]}</button>)}</div>
           <div className="seg seg-filter" role="group" aria-label="Filter films">{FILTERS.map(([f, label]) => <button key={f} aria-pressed={filter === f} className={filter === f ? 'on' : ''} onClick={() => setFilter(f)}>{label}</button>)}</div>
           <button className="reset-link" onClick={() => setConfirm(true)}>RESET</button>
-          {done.length === total && <button className="primary-cta claim-cta" onClick={() => setScreen('final')}>CLAIM YOUR LOKI TICKET <ArrowRight /></button>}
+          {doneN === total && <button className="primary-cta claim-cta" onClick={() => setScreen('final')}>CLAIM YOUR LOKI TICKET <ArrowRight /></button>}
         </div>
         <p className="order-hint">{BLURB[progress.selectedOrder]} · showing {shown.length} of {total}. Marking a film as seen is just for tracking; only the trial makes you worthy.</p>
         {shown.length === 0 && <p className="empty-state">NOTHING IN THIS CHAMBER.</p>}
@@ -96,11 +100,14 @@ export default function Page() {
             <div className="btn-row">{!isDone(sel) && <button className={`ghost-cta seen-btn ${seen.includes(sel.id) ? 'on' : ''}`} aria-pressed={seen.includes(sel.id)} onClick={() => markSeen(sel.id)}>{seen.includes(sel.id) ? <><EyeOff size={14} /> UNMARK SEEN</> : <><Eye size={14} /> MARK AS SEEN</>}</button>}<a className="ghost-cta" href={sel.watchSearchUrl} target="_blank" rel="noopener noreferrer">CHECK WHERE TO WATCH <ExternalLink size={14} /></a>
               {ready ? <button className="primary-cta" onClick={() => setScreen('trial')}>{isDone(sel) ? 'RE-VERIFY ARTIFACT' : 'PROVE YOU WATCHED IT'} <ArrowRight /></button>
                 : <button className="primary-cta" disabled><LockKeyhole size={14} /> TRIAL SEALED — BEING FORGED</button>}</div></div></div>
+        {related.length > 0 && <div className="related"><h3 className="phase-head">IF YOU'RE INTERESTED<small>RELATED FILMS · ☠ = ROAD TO DOOMSDAY</small></h3>
+          <div className="related-grid">{related.map((m) => <button key={m.id} className={`related-item ${m.doomsday ? 'doom' : ''}`} onClick={() => { open(m); window.scrollTo(0, 0) }}>
+            {m.doomsday && <span className="doom-tag">☠ DOOMSDAY ESSENTIAL</span>}<Poster title={m.title} article={m.poster} /><b>{m.title}</b></button>)}</div></div>}
       </motion.section>}
 
       {screen === 'trial' && <Quiz key={sel.id} movie={sel} onFinish={finish} />}
       {screen === 'failure' && <FailureScreen score={score} onRetry={() => setScreen('trial')} onBack={() => setScreen('archive')} />}
-      {screen === 'success' && <SuccessScreen hasNext={nextUnverified(list, done, sel.id) !== null} onContinue={() => setScreen(done.length === total ? 'final' : 'archive')} onNext={next} />}
+      {screen === 'success' && <SuccessScreen hasNext={nextUnverified(list, done, sel.id) !== null} onContinue={() => setScreen(doneN === total ? 'final' : 'archive')} onNext={next} />}
       {screen === 'final' && <FinalCompletion list={list} total={total} onReplay={() => setScreen('paths')} onArchive={() => setScreen('archive')} />}
     </AnimatePresence>
 
