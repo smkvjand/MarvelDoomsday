@@ -6,7 +6,7 @@
 @theme inline { --color-background: var(--background); --color-foreground: var(--foreground); --color-border: var(--border); }
 * { box-sizing: border-box; }
 html, body { margin: 0; min-height: 100%; background: #07120d; color: #dbe5d6; }
-body { font-family: Arial, Helvetica, sans-serif; }
+body { font-family: 'Hind', system-ui, sans-serif; }
 button { cursor: pointer; font: inherit; }
 .marvel-shell { min-height: 100vh; overflow: hidden; position: relative; background: radial-gradient(ellipse at 50% 42%, #254c31 0%, #122c1d 35%, #091a11 68%, #030b07 100%); }
 .marvel-shell:before { content: ''; position: fixed; inset: 0; pointer-events: none; opacity: .55; background: repeating-linear-gradient(110deg, transparent 0 2px, rgba(164,205,151,.018) 3px 4px), radial-gradient(circle at 50% 46%, transparent 8%, rgba(0,0,0,.72) 88%); z-index: 2; }
@@ -18,7 +18,7 @@ button { cursor: pointer; font: inherit; }
 
 /* ===== DOOM THRONE-HALL OVERHAUL ===== */
 :root { --doom: #8dff4a; --doom-deep: #1d5a2a; --gold: #d8b25a; }
-body, .marvel-shell { font-family: 'Cormorant Garamond', Georgia, serif; }
+body, .marvel-shell { font-family: 'Hind', system-ui, sans-serif; }
 .marvel-shell { background: #020604; }
 h1, h2, .section-title, .eyebrow, .primary-cta, .path-name, .answer-panel, .poster-title, .top-status, .trial-header { font-family: 'Cinzel', 'Trajan Pro', serif; }
 .doom-floor { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
@@ -113,7 +113,7 @@ html { scroll-behavior: smooth; }
 .claim-cta { margin-left: auto; }
 
 /* Footer */
-.site-footer { position: relative; z-index: 6; margin-top: 0; padding: 56px 6vw 28px; background: linear-gradient(180deg, rgba(2,6,4,.92), #010302); border-top: 1px solid rgba(216,178,90,.45); box-shadow: 0 -20px 60px rgba(141,255,74,.08); font-family: 'Cormorant Garamond', Georgia, serif; color: #aebfa6; }
+.site-footer { position: relative; z-index: 6; margin-top: 0; padding: 56px 6vw 28px; background: linear-gradient(180deg, rgba(2,6,4,.92), #010302); border-top: 1px solid rgba(216,178,90,.45); box-shadow: 0 -20px 60px rgba(141,255,74,.08); font-family: 'Hind', system-ui, sans-serif; color: #aebfa6; }
 .site-footer:before { content: ''; position: absolute; top: -1px; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--doom), var(--gold), var(--doom), transparent); box-shadow: 0 0 14px var(--doom); }
 .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1.2fr; gap: 40px; max-width: 1200px; margin: 0 auto; }
 .foot-logo { font: 700 18px 'Cinzel', serif; letter-spacing: .18em; color: #e7f1dc; } .foot-logo i { color: var(--doom); font-style: normal; }
@@ -246,3 +246,8 @@ button.brand-mark { background: none; border: 0; padding: 0; }
 @media (max-width: 760px) { .path-grid { grid-template-columns: 1fr; } }
 .path-panel.doom-path { border-color: var(--gold); background: linear-gradient(180deg, rgba(216,178,90,.18), rgba(3,10,6,.66)); box-shadow: 0 0 28px rgba(216,178,90,.3); }
 .path-panel.doom-path .path-name { color: var(--gold); }
+.topbar, .topbar *, .top-status, .top-status * { font-family: 'Hind', system-ui, sans-serif !important; font-weight: 600; }
+.topbar button, .top-status { letter-spacing: .2em; font-size: 12px; }
+.verified-count { display: inline-flex; flex-direction: column; align-items: flex-end; padding: 14px 22px 12px; text-align: right; color: #cfe2c4; font: 600 22px 'Hind', system-ui, sans-serif; letter-spacing: .06em; background: linear-gradient(180deg, rgba(141,255,74,.10), rgba(3,10,6,.7)); border: 1px solid rgba(141,255,74,.4); box-shadow: 0 0 26px rgba(141,255,74,.18), inset 0 0 18px rgba(141,255,74,.06); }
+.verified-count strong { font: 700 64px/1 'Hind', system-ui, sans-serif; color: var(--doom); text-shadow: 0 0 22px rgba(141,255,74,.65); }
+.verified-count small { margin-top: 8px; font: 600 12px 'Hind', system-ui, sans-serif; letter-spacing: .16em; color: #b9cdb0; text-transform: uppercase; white-space: nowrap; }
