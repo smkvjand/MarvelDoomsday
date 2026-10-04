@@ -5,31 +5,37 @@ export const metadata: Metadata = { title: 'Privacy Policy', description: 'How M
 export default function Page() {
   return (
     <LegalPage title="Privacy Policy">
-      <p>MARVEL // WORTHY (“the Site”) is operated by {SITE.dev.name} (“we”, “us”). We built it to need as little data as possible. There are no accounts, no logins, and no ads.</p>
-      <h2>What stays on your device</h2>
-      <p>Your quiz progress, chosen viewing order, and the name you type for your Loki ticket are saved in your browser’s local storage. They never leave your device and we cannot see them. Clearing your browser data, or using “Reset Journey”, deletes them.</p>
-      <h2>What we collect</h2>
+      <p>This policy explains how MARVEL // WORTHY (“the Site”) handles information. The Site is operated from India by {SITE.dev.name}, who is the data controller / data fiduciary for the limited information described here. The Site has no accounts, logins, forms for personal data, or ads.</p>
+      <h2>Information that stays on your device</h2>
+      <p>Your quiz progress, “seen” marks, chosen viewing order, and the name you type for your Loki ticket are saved in your browser’s local storage. They are not sent to us and we cannot see them. Clearing your browser data, or using “Reset”, deletes them.</p>
+      <h2>Information we process</h2>
       <ul>
-        <li><b>Anonymous visit counter:</b> when you open the Site, a single total number is incremented once per browser session. We do not store your IP address, identity, or any per-visitor record in this counter.</li>
-        <li><b>Aggregate analytics:</b> we use Vercel Web Analytics, a privacy-focused service that measures page views without cookies and without building cross-site profiles.</li>
-        <li><b>Server logs:</b> our hosting provider (Vercel) may process technical data such as IP address and user agent to deliver the Site and protect it from abuse.</li>
+        <li><b>Anonymous usage counters:</b> running totals of daily visits, trials passed or failed, films marked as seen, and tickets forged. They contain no identifiers and are shown publicly on the <a href="/stats">Statistics</a> page.</li>
+        <li><b>Aggregate analytics:</b> Vercel Web Analytics measures page views without cookies and without cross-site profiling.</li>
+        <li><b>Technical logs:</b> our hosting provider (Vercel) may process technical data such as IP address, browser type and request details to deliver the Site and protect it against abuse.</li>
       </ul>
-      <h2>Third-party services</h2>
+      <h2>Why we process it (legal bases)</h2>
+      <p>Where laws such as the GDPR/UK GDPR apply, we rely on our legitimate interests in running, securing and understanding the use of a free website, and on your consent for non-essential storage if required. We do not make automated decisions that affect you and do not profile you.</p>
+      <h2>Third parties and international transfers</h2>
       <ul>
-        <li><b>Google Fonts</b> serves the typefaces (your IP address is sent to Google when they load).</li>
-        <li><b>Wikipedia / Wikimedia</b> supplies film poster images, loaded directly from their servers.</li>
-        <li><b>Vercel</b> hosts the Site; a managed Redis database (e.g. Upstash) may store the anonymous visit total.</li>
-        <li><b>Watch links</b> open third-party search pages. Their privacy practices apply once you leave the Site.</li>
+        <li><b>Vercel</b> (hosting and analytics) and <b>Upstash</b> (database for anonymous counters) process data on our behalf, possibly in the United States or other countries.</li>
+        <li><b>Google Fonts</b> serves typefaces; your IP address is sent to Google when they load.</li>
+        <li><b>Wikipedia / Wikimedia</b> supplies poster images, loaded directly from their servers.</li>
+        <li><b>“Where to watch” links</b> open third-party search pages with their own privacy practices.</li>
       </ul>
-      <p>We do not sell personal data, and we do not use it for advertising or profiling.</p>
-      <h2>Children</h2>
-      <p>The Site is a general-audience movie quiz and is not directed at children under 13. We knowingly collect no personal information from anyone.</p>
+      <p>Where data is transferred internationally, it relies on the safeguards those providers offer (for example standard contractual clauses or equivalent frameworks).</p>
+      <h2>Retention</h2>
+      <p>Daily visit counters are kept for about 45 days; running totals are kept as long as the Site operates. Hosting logs follow the provider’s retention policy. Data in your browser stays until you delete it.</p>
       <h2>Your rights</h2>
-      <p>Because we hold no personal data about you, there is usually nothing to access or erase beyond what is in your own browser. If you are in the EU/UK (GDPR) or India (DPDP Act, 2023) and believe we hold data about you, contact us using the details below and we will respond promptly.</p>
+      <p>Depending on where you live, you may have the right to access, correct, delete, restrict or object to processing of personal data, to withdraw consent, to data portability, and to complain to your data protection authority. This includes rights under the GDPR/UK GDPR, the California CCPA/CPRA, and India’s Digital Personal Data Protection Act, 2023. We <b>do not sell or share personal information</b> for advertising. Because we hold no personal data about you beyond standard server logs, most requests can be answered quickly. We honour browser “Do Not Track” and Global Privacy Control signals by default, since we do not track you across sites.</p>
+      <h2>Children</h2>
+      <p>The Site is a general-audience movie quiz and is not directed at children under 13. We do not knowingly collect personal information from children. If you believe a child has provided personal information, contact us and we will delete it.</p>
+      <h2>Security</h2>
+      <p>We use HTTPS and standard security headers and keep data collection minimal. No online service can guarantee absolute security.</p>
       <h2>Changes</h2>
       <p>We may update this policy; the date above shows the latest revision.</p>
-      <h2>Contact</h2>
-      <p>Reach the developer through <a href={SITE.dev.portfolio} target="_blank" rel="noopener noreferrer">the portfolio</a> or <a href={SITE.dev.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>.</p>
+      <h2>Contact and grievances</h2>
+      <p>Send privacy requests or complaints through the <a href="/contact">Contact</a> page. We aim to acknowledge within 7 days and respond within 30 days.</p>
     </LegalPage>
   )
 }

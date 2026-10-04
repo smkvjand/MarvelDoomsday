@@ -10,6 +10,7 @@ export const SITE = {
     linkedin: 'https://www.linkedin.com/in/smkvjand/',
     youtube: 'https://www.youtube.com/@smkvjand',
     portfolio: 'https://smkvjand.github.io/portfolio/',
+    email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? '',
   },
   legalUpdated: '4 October 2026',
 }

@@ -4,6 +4,7 @@ import { AnimatePresence, MotionConfig, motion } from 'framer-motion'
 import { ArrowRight, ChevronLeft, ExternalLink, Eye, EyeOff, LockKeyhole } from 'lucide-react'
 import { movies, type Movie } from '../data/movies'
 import { useProgress } from '../hooks/useProgress'
+import { track } from '../lib/track'
 import { ORDER_LABEL, nextUnverified, sortMovies, type Order } from '../utils/ordering'
 import MovieCard from '../components/MovieCard'
 import Poster from '../components/Poster'
@@ -35,7 +36,8 @@ export default function Page() {
   const groups = progress.selectedOrder === 'phase' ? Array.from(new Set(shown.map((m) => m.phase))).map((label) => ({ label, items: shown.filter((m) => m.phase === label) })) : [{ label: '', items: shown }]
   const years = (xs: Movie[]) => { const y = xs.map((m) => m.year); const a = Math.min(...y), b = Math.max(...y); return a === b ? `${a}` : `${a}–${b}` }
   const open = (m: Movie) => { setSel(m); setScreen('detail') }
-  const finish = (s: number) => { setScore(s); if (s === 5) { complete(sel.id); setScreen('success') } else setScreen('failure') }
+  const finish = (s: number) => { setScore(s); if (s === 5) { complete(sel.id); track('pass'); setScreen('success') } else { track('fail'); setScreen('failure') } }
+  const markSeen = (id: string) => { if (!seen.includes(id)) track('seen'); toggleSeen(id) }
   const next = () => { const n = nextUnverified(list, done, sel.id); if (n) open(n); else setScreen('final') }
   const ready = sel.questions.length === 5
 
@@ -78,7 +80,7 @@ export default function Page() {
         {shown.length === 0 && <p className="empty-state">NOTHING IN THIS CHAMBER.</p>}
         {groups.map((g) => <div key={g.label || 'all'} className="phase-block">
           {g.label && <h3 className="phase-head">{g.label}<small>{years(g.items)} · {g.items.length} FILMS</small></h3>}
-          <div className="poster-grid">{g.items.map((m, i) => <MovieCard key={`${progress.selectedOrder}-${m.id}`} movie={m} done={isDone(m)} seen={isSeen(m)} rank={list.indexOf(m) + 1} index={i} onOpen={() => open(m)} onToggleSeen={() => toggleSeen(m.id)} />)}</div>
+          <div className="poster-grid">{g.items.map((m, i) => <MovieCard key={`${progress.selectedOrder}-${m.id}`} movie={m} done={isDone(m)} seen={isSeen(m)} rank={list.indexOf(m) + 1} index={i} onOpen={() => open(m)} onToggleSeen={() => markSeen(m.id)} />)}</div>
         </div>)}
       </motion.section>}
 
@@ -91,7 +93,7 @@ export default function Page() {
             <div className="detail-meta"><span>YEAR<strong>{sel.year}</strong></span><span>RUNTIME<strong>{sel.runtime} MIN</strong></span><span>DIRECTOR<strong>{sel.director}</strong></span>
               <span>MAIN CHARACTER<strong>{sel.mainCharacter}</strong></span><span>MAIN VILLAIN<strong>{sel.mainVillain}</strong></span><span>SETTING<strong>{sel.setting}</strong></span></div>
             <p className="detail-desc">{sel.description}</p>
-            <div className="btn-row">{!isDone(sel) && <button className={`ghost-cta seen-btn ${seen.includes(sel.id) ? 'on' : ''}`} aria-pressed={seen.includes(sel.id)} onClick={() => toggleSeen(sel.id)}>{seen.includes(sel.id) ? <><EyeOff size={14} /> UNMARK SEEN</> : <><Eye size={14} /> MARK AS SEEN</>}</button>}<a className="ghost-cta" href={sel.watchSearchUrl} target="_blank" rel="noopener noreferrer">CHECK WHERE TO WATCH <ExternalLink size={14} /></a>
+            <div className="btn-row">{!isDone(sel) && <button className={`ghost-cta seen-btn ${seen.includes(sel.id) ? 'on' : ''}`} aria-pressed={seen.includes(sel.id)} onClick={() => markSeen(sel.id)}>{seen.includes(sel.id) ? <><EyeOff size={14} /> UNMARK SEEN</> : <><Eye size={14} /> MARK AS SEEN</>}</button>}<a className="ghost-cta" href={sel.watchSearchUrl} target="_blank" rel="noopener noreferrer">CHECK WHERE TO WATCH <ExternalLink size={14} /></a>
               {ready ? <button className="primary-cta" onClick={() => setScreen('trial')}>{isDone(sel) ? 'RE-VERIFY ARTIFACT' : 'PROVE YOU WATCHED IT'} <ArrowRight /></button>
                 : <button className="primary-cta" disabled><LockKeyhole size={14} /> TRIAL SEALED — BEING FORGED</button>}</div></div></div>
       </motion.section>}

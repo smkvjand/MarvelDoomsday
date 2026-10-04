@@ -208,3 +208,25 @@ button.brand-mark { background: none; border: 0; padding: 0; }
 .seen-toggle:disabled { color: var(--gold); cursor: default; background: rgba(216,178,90,.08); }
 .seen-btn.on { border-color: #7fd6c2; color: #7fd6c2; box-shadow: 0 0 18px rgba(127,214,194,.3); }
 .seen-note { margin: -8px 0 18px; font-size: 16px; color: #8aa081; }
+
+/* Stats */
+.foot-right { display: inline-flex; align-items: center; gap: 14px; }
+.stats-btn { padding: 6px 14px; border: 1px solid rgba(141,255,74,.35); font: 700 10px 'Cinzel', serif !important; letter-spacing: .25em; background: rgba(3,10,6,.7); }
+.stats-btn:hover { border-color: var(--gold); box-shadow: 0 0 16px rgba(216,178,90,.3); }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin: 10px 0 30px; }
+.stat-card { padding: 18px 20px; background: rgba(3,10,6,.75); border: 1px solid rgba(141,255,74,.25); position: relative; }
+.stat-card small { display: block; font: 700 9px 'Cinzel', serif; letter-spacing: .28em; color: #7e9a78; }
+.stat-card b { display: block; margin-top: 8px; font: 800 38px 'Cinzel', serif; color: var(--doom); text-shadow: 0 0 20px rgba(141,255,74,.5); }
+.stat-bars { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; height: 200px; align-items: end; padding: 16px; border: 1px solid rgba(141,255,74,.2); background: rgba(3,10,6,.6); }
+.stat-bar { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; gap: 6px; }
+.stat-bar i { display: block; width: 70%; background: linear-gradient(180deg, var(--doom), var(--doom-deep)); box-shadow: 0 0 14px rgba(141,255,74,.4); }
+.stat-bar span { font: 700 12px 'Cinzel', serif; color: var(--gold); } .stat-bar em { font: normal 600 9px 'Cinzel', serif; letter-spacing: .12em; color: #7e9a78; }
+.stat-note { font-size: 15px; color: #6f8268; margin-top: 18px; }
+
+/* Path cards: clean layout, no overflow */
+.path-panel { display: flex !important; flex-direction: column; align-items: flex-start; text-align: left; padding: 28px !important; min-height: 320px !important; container-type: inline-size; overflow: hidden; }
+.path-number { margin-bottom: auto; font: 700 13px 'Cinzel', serif; letter-spacing: .3em; padding-bottom: 36px; }
+.path-name { position: static !important; display: block; width: 100%; font-size: clamp(18px, 7.2cqw, 40px) !important; line-height: 1.05; letter-spacing: .02em !important; overflow-wrap: anywhere; color: #eef7e2; text-shadow: 0 0 24px rgba(141,255,74,.18); }
+.path-panel small { display: block; margin-top: 12px !important; padding-right: 44px; font-size: 16px !important; line-height: 1.35; opacity: .75 !important; letter-spacing: .04em !important; }
+.path-arrow { top: 24px !important; bottom: auto !important; right: 24px !important; transition: transform .25s; }
+.path-panel:hover .path-arrow { transform: translateX(6px); color: var(--gold); }

@@ -9,6 +9,7 @@ export default function Page() {
       <ul>
         <li><code>marvel-worthy-progress-v1</code>: which films you have verified and your chosen viewing order.</li>
         <li><code>marvel-worthy-ticket-v1</code>: the name and issue date on your Loki ticket.</li>
+        <li><code>mw-ticket-counted</code>: remembers that your ticket was already counted in the anonymous statistics.</li>
         <li><code>mw-notice-v1</code>: remembers that you dismissed the storage notice.</li>
       </ul>
       <h2>Session storage</h2>

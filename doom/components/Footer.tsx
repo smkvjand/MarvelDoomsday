@@ -20,6 +20,7 @@ export default function Footer() {
           <Link href="/terms">Terms of Use</Link>
           <Link href="/disclaimer">Disclaimer &amp; Copyright</Link>
           <Link href="/cookies">Cookies &amp; Storage</Link>
+          <Link href="/contact">Contact &amp; Takedowns</Link>
         </nav>
         <div>
           <h4>THE DEVELOPER</h4>
@@ -34,7 +35,7 @@ export default function Footer() {
       <div className="foot-bottom">
         <span>© {new Date().getFullYear()} {d.name}. Original code &amp; design, all rights reserved.</span>
         <span>Unofficial fan project. Not affiliated with, endorsed by, or sponsored by Marvel or Disney.</span>
-        <VisitCounter />
+        <span className="foot-right"><Link href="/stats" className="stats-btn">STATS</Link><VisitCounter /></span>
       </div>
     </footer>
   )

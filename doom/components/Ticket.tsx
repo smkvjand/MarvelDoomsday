@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Download, Pencil, Printer } from 'lucide-react'
+import { track } from '../lib/track'
 
 const KEY = 'marvel-worthy-ticket-v1'
 type Saved = { name: string; issued: string }
@@ -61,6 +62,7 @@ export default function Ticket({ total }: { total: number }) {
     const s = { name, issued: new Date().toISOString() }
     try { localStorage.setItem(KEY, JSON.stringify(s)) } catch {}
     setSaved(s)
+    try { if (!localStorage.getItem('mw-ticket-counted')) { localStorage.setItem('mw-ticket-counted', '1'); track('ticket') } } catch {}
   }
   const edit = () => { if (saved) setDraft(saved.name); try { localStorage.removeItem(KEY) } catch {} setSaved(null) }
   if (!ready) return null
